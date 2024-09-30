@@ -1,12 +1,12 @@
 import asyncio
 import psutil
-import socket  # Import socket module for connection types
+import socket  
 import ctypes
 import win32serviceutil
 import wmi
 
 def get_all_services():
-    """Fetch all services once and return a mapping of PID to service names."""
+    """Fetch all services and return a mapping of PID to service names."""
     services_map = {}
     try:
         c = wmi.WMI()
@@ -20,7 +20,7 @@ def get_all_services():
     return services_map
 
 async def fetch_services(pid, services_map):
-    """Fetch services for a given PID and print results immediately."""
+    """Fetch services for a given PID and print results to CLI."""
     services_str = ', '.join(services_map.get(pid, [])) if pid in services_map else 'None'
     print(f"svchost.exe PID: {pid} - Services: {services_str}")
 
@@ -51,7 +51,7 @@ def get_dlls_for_svchost(pid):
         return []
 
 async def fetch_dlls(pid):
-    """Fetch DLLs for a given PID and print results immediately."""
+    """Fetch DLLs for a given PID and print results."""
     dlls = get_dlls_for_svchost(pid)
     dlls_str = ', '.join(dlls) if dlls else 'None'
     print(f"svchost.exe PID: {pid} - Loaded DLLs: {dlls_str}")
@@ -71,7 +71,7 @@ async def get_active_dlls():
         print(f"No process found with PID {pid}.")
 
 def assess_vulnerability(rss, vms, private, num_handles, num_threads):
-    """Assess potential vulnerability to process injection based on memory metrics."""
+    """Assess potential threat level."""
     # Adjusted threshold values
     HIGH_PRIVATE_MEMORY_THRESHOLD = 20  # MB
     HIGH_THREAD_COUNT_THRESHOLD = 15
@@ -121,7 +121,7 @@ def get_memory_usage():
     print()
 
 def get_network_connections():
-    """Fetch detailed network connections for svchost processes."""
+    """Fetch network connections for svchost processes."""
     print("Fetching network connections for svchost.exe processes...")
     print(f"{'PID':<8}{'Type':<8}{'Protocol':<10}{'Local Address':<25}{'Remote Address':<25}{'Status':<15}{'Services'}")
     print("=" * 110)
